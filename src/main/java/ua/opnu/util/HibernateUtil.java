@@ -5,6 +5,7 @@ import org.hibernate.cfg.Configuration;
 import org.flywaydb.core.Flyway;
 import ua.opnu.entity.Client;
 import ua.opnu.entity.Planet;
+import ua.opnu.entity.Ticket;
 
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
@@ -25,6 +26,7 @@ public class HibernateUtil {
                         .configure()
                         .addAnnotatedClass(Client.class)
                         .addAnnotatedClass(Planet.class)
+                        .addAnnotatedClass(Ticket.class)
                         .buildSessionFactory();
                 System.out.println("SessionFactory built successfully.");
             } catch (Exception e) {
