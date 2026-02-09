@@ -5,7 +5,7 @@ CREATE TABLE client (
 
 CREATE TABLE planet (
                         id VARCHAR(50) PRIMARY KEY CHECK (id REGEXP '^[A-Z0-9]+$'),
-    name VARCHAR(500) NOT NULL CHECK (length(name) >= 1)
+                        name VARCHAR(500) NOT NULL CHECK (length(name) >= 1)
 );
 
 CREATE TABLE ticket (
