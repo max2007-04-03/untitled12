@@ -10,11 +10,17 @@ public class HibernatePlanetDao implements PlanetDao {
 
     @Override
     public Planet create(Planet planet) {
+        Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
+            tx = session.beginTransaction();
             session.persist(planet);
             tx.commit();
             return planet;
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
         }
     }
 
@@ -27,20 +33,32 @@ public class HibernatePlanetDao implements PlanetDao {
 
     @Override
     public Planet update(Planet planet) {
+        Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
-            Planet merged = (Planet) session.merge(planet);
+            tx = session.beginTransaction();
+            Planet merged = session.merge(planet);
             tx.commit();
             return merged;
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
         }
     }
 
     @Override
     public void delete(Planet planet) {
+        Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
+            tx = session.beginTransaction();
             session.remove(planet);
             tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
         }
     }
 }

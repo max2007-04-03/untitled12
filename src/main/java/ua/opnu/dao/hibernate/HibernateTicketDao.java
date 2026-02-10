@@ -10,11 +10,17 @@ public class HibernateTicketDao implements TicketDao {
 
     @Override
     public Ticket create(Ticket ticket) {
+        Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
+            tx = session.beginTransaction();
             session.persist(ticket);
             tx.commit();
             return ticket;
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
         }
     }
 
@@ -27,20 +33,32 @@ public class HibernateTicketDao implements TicketDao {
 
     @Override
     public Ticket update(Ticket ticket) {
+        Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
-            Ticket merged = (Ticket) session.merge(ticket);
+            tx = session.beginTransaction();
+            Ticket merged = session.merge(ticket);
             tx.commit();
             return merged;
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
         }
     }
 
     @Override
     public void delete(Ticket ticket) {
+        Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
+            tx = session.beginTransaction();
             session.remove(ticket);
             tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
         }
     }
 }
