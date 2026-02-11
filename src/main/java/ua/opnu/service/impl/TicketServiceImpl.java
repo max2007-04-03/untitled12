@@ -66,6 +66,51 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public Ticket update(long ticketId, long clientId, String fromPlanetId, String toPlanetId) {
+        if (ticketId <= 0) throw new IllegalArgumentException("ticketId має бути > 0");
+        if (clientId <= 0) throw new IllegalArgumentException("clientId має бути > 0");
+        if (fromPlanetId == null || fromPlanetId.trim().isEmpty()) {
+            throw new IllegalArgumentException("fromPlanetId не може бути порожнім");
+        }
+        if (toPlanetId == null || toPlanetId.trim().isEmpty()) {
+            throw new IllegalArgumentException("toPlanetId не може бути порожнім");
+        }
+
+        Ticket existing = ticketDao.findById(ticketId);
+        if (existing == null) {
+            throw new IllegalArgumentException("Ticket з id=" + ticketId + " не знайдено");
+        }
+
+        String fromId = fromPlanetId.trim();
+        String toId = toPlanetId.trim();
+
+        if (fromId.equals(toId)) {
+            throw new IllegalArgumentException("fromPlanetId та toPlanetId не можуть бути однаковими");
+        }
+
+        Client client = clientDao.findById(clientId);
+        if (client == null) {
+            throw new IllegalArgumentException("Client з id=" + clientId + " не знайдено");
+        }
+
+        Planet fromPlanet = planetDao.findById(fromId);
+        if (fromPlanet == null) {
+            throw new IllegalArgumentException("Planet (from) з id=" + fromId + " не знайдено");
+        }
+
+        Planet toPlanet = planetDao.findById(toId);
+        if (toPlanet == null) {
+            throw new IllegalArgumentException("Planet (to) з id=" + toId + " не знайдено");
+        }
+
+        existing.setClient(client);
+        existing.setFromPlanet(fromPlanet);
+        existing.setToPlanet(toPlanet);
+
+        return ticketDao.update(existing);
+    }
+
+    @Override
     public void delete(long id) {
         if (id <= 0) throw new IllegalArgumentException("Ticket id має бути > 0");
         Ticket existing = ticketDao.findById(id);

@@ -31,6 +31,27 @@ public class DemoRunner {
         System.out.println("Ticket loaded, id=" + loaded.getId()
                 + ", createdAt=" + loaded.getCreatedAt());
 
+        try {
+            ticketService.create(999999L, "EARTH", "MARS");
+            System.out.println("ERROR: ticket created for non-existing client (should not happen)");
+        } catch (IllegalArgumentException e) {
+            System.out.println("OK (non-existing client): " + e.getMessage());
+        }
+
+        try {
+            ticketService.create(1L, null, "MARS");
+            System.out.println("ERROR: ticket created with null fromPlanetId (should not happen)");
+        } catch (IllegalArgumentException e) {
+            System.out.println("OK (null fromPlanetId): " + e.getMessage());
+        }
+
+        try {
+            ticketService.create(1L, "NO_SUCH_PLANET", "MARS");
+            System.out.println("ERROR: ticket created for non-existing planet (should not happen)");
+        } catch (IllegalArgumentException e) {
+            System.out.println("OK (non-existing planet): " + e.getMessage());
+        }
+
         ticketService.delete(created.getId());
         System.out.println("Ticket deleted, id=" + created.getId());
 

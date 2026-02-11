@@ -16,10 +16,7 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * У БД: created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-     * insertable=false дозволяє БД самій проставляти значення за замовчуванням.
-     */
+
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private Instant createdAt;
 

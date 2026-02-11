@@ -7,5 +7,7 @@ public interface TicketService {
 
     Ticket findById(long id);
 
+    Ticket update(long ticketId, long clientId, String fromPlanetId, String toPlanetId);
+
     void delete(long id);
 }
